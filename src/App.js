@@ -14,13 +14,43 @@ const App = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    sendFeedback("template_batm9jj", {
-      name,
-      company,
-      phone,
-      email,
-      message,
-    });
+    const isEmail = () => {
+      let mail = document.getElementById("not-mail");
+      let regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      if (email.match(regex)) {
+        mail.style.display = "none";
+        return true;
+      } else {
+        mail.style.display = "block";
+        mail.style.animation = "dongle 1s";
+        setTimeout(() => {
+          mail.style.animation = "none";
+        }, 1000);
+        return false;
+      }
+    };
+
+    const failledMessage = () => {
+      let msgError = document.querySelector(".form-message");
+      msgError.style.opacity = 1;
+      msgError.style.background = "crimson";
+      msgError.style.color = "#ffff";
+      document.getElementById("name").classList.add("error");
+      document.getElementById("email").classList.add("error");
+      document.getElementById("message").classList.add("error");
+    };
+
+    if (name && company && phone && isEmail() && message) {
+      sendFeedback("template_batm9jj", {
+        name,
+        company,
+        phone,
+        email,
+        message,
+      });
+    } else {
+      failledMessage();
+    }
   };
 
   const sendFeedback = (templateId, variables) => {
@@ -96,7 +126,9 @@ const App = () => {
         value="Envoyer"
         onClick={handleSubmit}
       />
-      <div className="form-message"></div>
+      <div className="form-message">
+        Veuillez saisir correctement le formulaire
+      </div>
     </form>
   );
 };
